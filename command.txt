@@ -1,0 +1,36 @@
+Create a ceph cluster
+----------------------------------------------------------------
+ceph-deploy new node01 node02
+
+echo "osd_pool_default_size = 2" >> ceph.conf
+
+ceph-deploy install --no-adjust-repos node01 node02
+
+ceph-deploy mon create-initial
+
+ceph-deploy osd prepare --fs-type btrfs node01:/dev/sdb:/osd_node01_0.journal
+ceph-deploy osd prepare --fs-type btrfs node02:/dev/sdb:/osd_node02_0.journal
+
+ceph-deploy osd activate node01:/dev/sdb1
+ceph-deploy osd activate node02:/dev/sdb1
+
+ceph-deploy admin node01 node02
+
+ceph-deploy mds create node01
+
+
+Install ceph client and test
+----------------------------------------------------------------
+rados mkpool test
+
+rbd create test-1 --size 4096 -p test
+
+rbd map test-1 -p test
+
+rbd showmapped
+
+mkfs.ext4 -m0 /dev/rbd0
+mkdir /data
+mount /dev/rbd0 /data
+
+
