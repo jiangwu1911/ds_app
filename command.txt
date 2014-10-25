@@ -1,36 +1,49 @@
 Create a ceph cluster
 ----------------------------------------------------------------
-ceph-deploy new node01 node02
+# ceph-deploy new node01 node02
 
-echo "osd_pool_default_size = 2" >> ceph.conf
+指定cluster名称, cluster_netowrk和public_network
+# ceph-deploy  --cluster ceph02 new --cluster-network 10.20.0.0/24 --public-network 192.168.206.0/24 node01 node02
 
-ceph-deploy install --no-adjust-repos node01 node02
+# echo "osd_pool_default_size = 2" >> ceph.conf
 
-ceph-deploy mon create-initial
+# ceph-deploy install --no-adjust-repos node01 node02
 
-ceph-deploy osd prepare --fs-type btrfs node01:/dev/sdb:/osd_node01_0.journal
-ceph-deploy osd prepare --fs-type btrfs node02:/dev/sdb:/osd_node02_0.journal
+# ceph-deploy mon create-initial
 
-ceph-deploy osd activate node01:/dev/sdb1
-ceph-deploy osd activate node02:/dev/sdb1
+# ceph-deploy osd prepare --fs-type btrfs node01:/dev/sdb:/osd_node01_0.journal
+# ceph-deploy osd prepare --fs-type btrfs node02:/dev/sdb:/osd_node02_0.journal
 
-ceph-deploy admin node01 node02
+# ceph-deploy osd activate node01:/dev/sdb1
+# ceph-deploy osd activate node02:/dev/sdb1
 
-ceph-deploy mds create node01
+# ceph-deploy admin node01 node02
+
+# ceph-deploy mds create node01
 
 
 Install ceph client and test
 ----------------------------------------------------------------
-rados mkpool test
+# rados mkpool test
 
-rbd create test-1 --size 4096 -p test
+# rbd create test-1 --size 4096 -p test
 
-rbd map test-1 -p test
+# rbd map test-1 -p test
 
-rbd showmapped
+# rbd showmapped
 
-mkfs.ext4 -m0 /dev/rbd0
-mkdir /data
-mount /dev/rbd0 /data
+# mkfs.ext4 -m0 /dev/rbd0
+# mkdir /data
+# mount /dev/rbd0 /data
 
+
+Destroy a cluster
+----------------------------------------------------------------
+# ceph-deploy purge node01 node02
+# ceph-deploy purgedata node01 node02
+
+# ceph-deploy disk zap --zap-disk node01:/dev/sdb
+# ceph-deploy disk zap --zap-disk node02:/dev/sdb
+
+最好到各节点上删除 /etc/ceph目录下的配置文件
 
