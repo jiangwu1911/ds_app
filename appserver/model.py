@@ -35,7 +35,7 @@ class User(Base, JsonObj):
         self.deleted = deleted
 
     def __repr__(self):
-        return ("<User(%d, '%s', '%s', '%s', %d, %d, %d)>"
+        return ("<User(%d, '%s', '%s', '%s', %d, %d)>"
                 % (self.id,
                    self.name,
                    self.password,
@@ -117,3 +117,32 @@ class Token(Base, JsonObj):
                % (self.id,
                   self.expires,
                   self.user_id))
+
+
+class OperationLog(Base, JsonObj):
+    __tablename__ = 'operation_log'
+    id = Column(Integer, Sequence('seq_pk'), primary_key=True)
+    user_id = Column(Integer)
+    resource_type = Column(String(100), nullable=False)
+    resource_id = Column(Integer)
+    resource_uuid = Column(String(100))
+    event = Column(String(2000))
+    occurred_at = Column(DateTime)
+
+    def __init__(self, user_id=0, resource_type='', resource_id=0, resource_uuid='',
+                 event='', occurred_at='0000-00-00 00:00:00'):
+        self.user_id = user_id
+        self.resource_type = resource_type
+        self.resource_id = resource_id
+        self.resource_uuid = resource_uuid
+        self.event = event
+        self.occurred_at = occurred_at
+
+    def __repr__(self):
+        return("<OperationLog(%d, '%s', %d, '%s', '%s', %d)>"
+             % (self.user_id,
+                self.resource_type,
+                self.resource_id,
+                self.resource_uuid,
+                self.event,
+                self.occurred_at))
