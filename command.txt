@@ -1,8 +1,10 @@
+甯哥敤鐨刢eph鍛戒护
+
+
 Create a ceph cluster
 ----------------------------------------------------------------
 # ceph-deploy new node01 node02
 
-指定cluster名称, cluster_netowrk和public_network
 # ceph-deploy  --cluster ceph02 new --cluster-network 10.20.0.0/24 --public-network 192.168.206.0/24 node01 node02
 
 # echo "osd_pool_default_size = 2" >> ceph.conf
@@ -44,6 +46,4 @@ Destroy a cluster
 
 # ceph-deploy disk zap --zap-disk node01:/dev/sdb
 # ceph-deploy disk zap --zap-disk node02:/dev/sdb
-
-最好到各节点上删除 /etc/ceph目录下的配置文件
 
